@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Vanessa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0, #ff9a9e);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #5a3a4a;
+        }
+
+        /* Floating Hearts Background */
+        .heart-bg {
+            position: fixed;
+            bottom: -50px;
+            color: #ff4d6d;
+            opacity: 0.5;
+            font-size: 24px;
+            animation: floatUp linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Pages Container */
+        .page {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 10;
+            padding: 20px;
+            max-width: 600px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Start Screen */
+        #start-screen {
+            cursor: pointer;
+        }
+        #start-screen h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: #d6336c;
+            margin-bottom: 20px;
+        }
+        .start-btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background: #d6336c;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(214, 51, 108, 0.4);
+            transition: transform 0.2s;
+        }
+        .start-btn:hover { transform: scale(1.05); }
+
+        /* Page 1: The Question */
+        .message-box {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        .message-box h1 {
+            font-family: 'Dancing Script', cursive;
+            color: #d6336c;
+            font-size: 2.5rem;
+            margin-top: 0;
+        }
+        .message-box p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 30px;
+            position: relative;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        #yesBtn {
+            background: #d6336c;
+            color: white;
+            box-shadow: 0 4px 15px rgba(214, 51, 108, 0.4);
+        }
+        #yesBtn:hover { transform: scale(1.1); }
+
+        #noBtn {
+            background: #e0e0e0;
+            color: #666;
+            position: fixed; /* Allows it to move anywhere on screen */
+            transition: left 0.3s, top 0.3s;
+        }
+
+        /* Page 2: Celebration */
+        #page2 h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            color: #d6336c;
+            margin-bottom: 20px;
+            animation: pulse 1.5s infinite;
+        }
+        #page2 p {
+            font-size: 1.3rem;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 20px 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #d6336c;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 100;
+            animation: confettiFall 3s linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Music Toggle */
+        .music-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.8);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Music (Make sure your mp3 file is named exactly "a_good_night.mp3") -->
+    <audio id="bgMusic" loop>
+        <source src="a_good_night.mp3" type="audio/mpeg">
+    </audio>
+
+    <button class="music-toggle" id="musicBtn" title="Toggle Music">🎵</button>
+
+    <!-- START SCREEN (Needed to bypass browser music-blocking rules) -->
+    <div class="page active" id="start-screen">
+        <h1>For Vanessa...</h1>
+        <button class="start-btn" id="startBtn">Open Message 💌</button>
+    </div>
+
+    <!-- PAGE 1: THE QUESTION -->
+    <div class="page" id="page1">
+        <div class="message-box">
+            <h1>Vanessa...</h1>
+            <p>We met last month and you brought back the spark in my life. When I'm with you, I feel like love is possible again. You make me want to love again, and it comes out naturally when I'm with you. <br><br>You're very special to me, and it's only taken a short time for you to become special to me. I really hope I make you feel the same way about me...<br><br><strong>Will you be my girlfriend?</strong></p>
+        </div>
+        <div class="btn-container">
+            <button class="btn" id="yesBtn">Yes! 💖</button>
+            <button class="btn" id="noBtn">No</button>
+        </div>
+    </div>
+
+    <!-- PAGE 2: CELEBRATION -->
+    <div class="page" id="page2">
+        <h1>Yay! 🥰</h1>
+        <p>I'm the luckiest person in the world.<br>I promise to make you smile every single day! ❤️</p>
+    </div>
+
+    <script>
+        // 1. Generate Floating Hearts
+        function createHearts() {
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart-bg');
+                heart.innerHTML = '❤';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 10 + 8) + 's';
+                heart.style.animationDelay = Math.random() * 10 + 's';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                document.body.appendChild(heart);
+            }
+        }
+        createHearts();
+
+        // 2. Audio Controls
+        const bgMusic = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        let isPlaying = false;
+
+        document.getElementById('startBtn').addEventListener('click', () => {
+            bgMusic.play().then(() => {
+                isPlaying = true;
+                musicBtn.innerHTML = '🔊';
+            }).catch(e => console.log("Audio play failed, user must interact first."));
+            
+            document.getElementById('start-screen').classList.remove('active');
+            document.getElementById('page1').classList.add('active');
+        });
+
+        musicBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                bgMusic.pause();
+                musicBtn.innerHTML = '🔇';
+                isPlaying = false;
+            } else {
+                bgMusic.play();
+                musicBtn.innerHTML = '🔊';
+                isPlaying = true;
+            }
+        });
+
+        // 3. The "No" Button Runs Away
+        const noBtn = document.getElementById('noBtn');
+        
+        function moveNoButton() {
+            const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            noBtn.style.left = `${randomX}px`;
+            noBtn.style.top = `${randomY}px`;
+        }
+
+        noBtn.addEventListener('mouseover', moveNoButton);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Prevents clicking on mobile
+            moveNoButton();
+        });
+
+        // 4. The "Yes" Button Pops (Confetti) & Switches Page
+        const yesBtn = document.getElementById('yesBtn');
+        
+        yesBtn.addEventListener('click', () => {
+            // Switch to Page 2
+            document.getElementById('page1').classList.remove('active');
+            document.getElementById('page2').classList.add('active');
+            
+            // Create Confetti Explosion
+            const colors = ['#d6336c', '#ff4d6d', '#ffc3a0', '#ffafbd', '#ffffff'];
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                
+                document.body.appendChild(confetti);
+                
+                // Clean up confetti after animation
+                setTimeout(() => confetti.remove(), 4000);
+            }
+        });
+    </script>
+</body>
+</html>
